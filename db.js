@@ -58,3 +58,58 @@ db.patients.updateOne({ "firstName": "John" }, {
 db.patients.find({ age: { $gt: 30 } })
 db.patients.find({ age: { $gt: "30" } }).pretty()
 db.patients.deleteMany({ "history.disease": "cold" })
+
+"------"
+
+db.companiesData.insertOne({
+    "_id": '123aaa',
+    name: 'shell'
+})
+
+db.companiesData.insertMany([
+    {
+        "_id": '123bbb',
+        name: 'Indian Oil'
+    },
+    {
+        "_id": '123ccc',
+        name: 'Hindustan Petroleum'
+    }
+])
+
+
+db.companiesData.insertMany([
+    {
+        "_id": '123bbb',
+        name: 'Indian Oil - 1'
+    },
+    {
+        "_id": '123ccc',
+        name: 'Hindustan Petroleum - 1'
+    },
+    {
+        "_id": '123ddd',
+        name: 'Aaramco'
+    }
+])
+
+db.companiesData.insertMany([
+    {
+        "_id": '123bbb',
+        name: 'Indian Oil - 1'
+    },
+    {
+        "_id": '123ccc',
+        name: 'Hindustan Petroleum - 1'
+    },
+    {
+        "_id": '123ddd',
+        name: 'Aaramco'
+    }
+], { ordered: false })
+
+
+db.companiesData.insertOne({
+    "_id": '123eee',
+    name: 'Mansfield Oil'
+}, { writeConcern: { w: 1, j: true } })
