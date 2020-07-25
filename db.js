@@ -113,3 +113,6 @@ db.companiesData.insertOne({
     "_id": '123eee',
     name: 'Mansfield Oil'
 }, { writeConcern: { w: 1, j: true } })
+
+"---"
+mongoimport tv-shows.json -d movieData -c movies --jsonArray --drop
