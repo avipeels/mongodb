@@ -59,7 +59,7 @@ router.get('/', (req, res, next) => {
   // Return a list of dummy products
   // Later, this data will be fetched from MongoDB
   // const queryPage = req.query.page;
-  // const pageSize = 5;
+  // const pageSize = 1;
   // let resultProducts = [...products];
   // if (queryPage) {
   //   resultProducts = products.slice(
@@ -73,6 +73,9 @@ router.get('/', (req, res, next) => {
     .db()
     .collection('products')
     .find()
+    // .sort({ price: -1 })
+    // .skip((queryPage - 1) * pageSize)
+    // .limit(pageSize)
     .forEach(product => {
       product.price = product.price.toString();
       products.push(product)
@@ -169,9 +172,8 @@ router.delete('/:id', (req, res, next) => {
     .collection('products')
     .deleteOne({ _id: new ObjectId(req.params.id) })
     .then(result => {
-      res
-        .status(200)
-        res.status(200).json({ message: 'Product deleted' });
+    
+      res.status(200).json({ message: 'Product deleted' });
     })
     .catch(err => {
       res
