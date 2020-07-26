@@ -57,16 +57,47 @@ const products = [
 router.get('/', (req, res, next) => {
   // Return a list of dummy products
   // Later, this data will be fetched from MongoDB
-  const queryPage = req.query.page;
-  const pageSize = 5;
-  let resultProducts = [...products];
-  if (queryPage) {
-    resultProducts = products.slice(
-      (queryPage - 1) * pageSize,
-      queryPage * pageSize
-    );
-  }
-  res.json(resultProducts);
+  // const queryPage = req.query.page;
+  // const pageSize = 5;
+  // let resultProducts = [...products];
+  // if (queryPage) {
+  //   resultProducts = products.slice(
+  //     (queryPage - 1) * pageSize,
+  //     queryPage * pageSize
+  //   );
+  // }
+  // res.json(resultProducts);
+  MongoClient.connect('mongodb+srv://avi:cg9M4sv3ay3ZTREv@cluster0.p7eeg.mongodb.net/shop?retryWrites=true&w=majority')
+    .then(client => {
+      const products = [];
+      client
+        .db()
+        .collection('products')
+        .find()
+        .forEach(product => {
+          product.price = product.price.toString();
+          products.push(product)
+        })
+        .then(result => {
+          client.close();
+          res
+            .status(200)
+            .json(products)
+        })
+        .catch(err => {
+          console.log(err);
+          client.close();
+          res
+            .status(500)
+            .json({ message: 'An error occured' });
+        })
+    })
+    .catch(err => {
+      console.log(err);
+      res
+        .status(500)
+        .json({ message: 'An error occured' });
+    });
 });
 
 // Get single product
@@ -88,13 +119,16 @@ router.post('', (req, res, next) => {
   MongoClient.connect('mongodb+srv://avi:cg9M4sv3ay3ZTREv@cluster0.p7eeg.mongodb.net/shop?retryWrites=true&w=majority')
     .then(client => {
       client.db().collection('products').insertOne(newProduct)
-        .then(result=>{
+        .then(result => {
           console.log(result);
-          client.close();   
+          client.close();
+          res
+            .status(201)
+            .json({ message: 'Product added', productId: result.insertedId })
         })
         .catch(err => {
           console.log(err);
-          client.close();   
+          client.close();
         })
     })
     .catch(err => {
