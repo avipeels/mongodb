@@ -164,7 +164,20 @@ router.patch('/:id', (req, res, next) => {
 // Delete a product
 // Requires logged in user
 router.delete('/:id', (req, res, next) => {
-  res.status(200).json({ message: 'Product deleted' });
+  db.getDb()
+    .db()
+    .collection('products')
+    .deleteOne({ _id: new ObjectId(req.params.id) })
+    .then(result => {
+      res
+        .status(200)
+        res.status(200).json({ message: 'Product deleted' });
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ message: err });
+    })
 });
 
 module.exports = router;
